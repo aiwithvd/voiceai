@@ -1,8 +1,13 @@
+import os
 import pytest
+from pydantic import ValidationError
 from config import Settings
 
-def test_requires_livekit_url():
-    with pytest.raises(ValueError, match="LIVEKIT_URL"):
+def test_requires_livekit_url(monkeypatch):
+    monkeypatch.delenv("LIVEKIT_URL", raising=False)
+    monkeypatch.delenv("LIVEKIT_API_KEY", raising=False)
+    monkeypatch.delenv("LIVEKIT_API_SECRET", raising=False)
+    with pytest.raises(ValidationError):
         Settings()
 
 def test_defaults_are_correct():

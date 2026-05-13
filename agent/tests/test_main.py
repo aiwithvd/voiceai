@@ -1,3 +1,8 @@
+import os
+os.environ.setdefault("LIVEKIT_URL", "ws://localhost:7880")
+os.environ.setdefault("LIVEKIT_API_KEY", "test-key")
+os.environ.setdefault("LIVEKIT_API_SECRET", "test-secret")
+
 import pytest
 from httpx import AsyncClient, ASGITransport
 from config import Settings

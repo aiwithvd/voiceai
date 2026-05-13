@@ -17,51 +17,10 @@
 
 ## Architecture
 
-```mermaid
-graph TB
-    subgraph Browser["Browser Layer"]
-        UI[Next.js App<br/>React 19 + Tailwind CSS 4]
-        AUI[Agents UI<br/>shadcn Components]
-        LK[LiveKit Client SDK<br/>WebRTC Connection]
-    end
-
-    subgraph Agent["Agent Service - Port 8001"]
-        FAST[FastAPI Server]
-        TOKEN[/token endpoint<br/>JWT Generation]
-        HEALTH[/health endpoint]
-        WORKER[LiveKit Agent Worker<br/>Background Thread]
-
-        subgraph Pipeline["Voice AI Pipeline"]
-            VAD[Silero VAD<br/>Voice Activity Detection]
-            STT[Whisper STT<br/>faster-whisper local]
-            LLM[Ollama LLM<br/>OpenAI-compatible API]
-            TTS[Edge-TTS<br/>Microsoft Edge TTS]
-        end
-
-        SAFE[SafeSTT / SafeLLM / SafeTTS<br/>Error Wrappers]
-    end
-
-    subgraph Services["External Services"]
-        LKS[LiveKit Server<br/>Port 7880-7882<br/>WebRTC SFU]
-        OLLAMA[Ollama<br/>Port 11434<br/>Local LLM]
-    end
-
-    subgraph Config["Configuration Layer"]
-        ENV[.env file<br/>Pydantic Settings]
-        MODELS[Model Providers<br/>Configurable at Runtime]
-    end
-
-    Browser -->|HTTP GET| TOKEN
-    Browser -->|WebRTC Audio| LKS
-    LKS -->|WebSocket Job| WORKER
-    WORKER --> SAFE --> Pipeline
-    STT -->|Audio to Text| SAFE
-    LLM -->|Text to Response| SAFE
-    TTS -->|Text to Audio| SAFE
-    LLM -->|OpenAI-compatible API| OLLAMA
-    Pipeline --> ENV
-    ENV --> MODELS
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="architecture.svg">
+  <img src="architecture.svg" alt="Voice AI Demo Architecture" width="100%">
+</picture>
 
 ### Data Flow
 
